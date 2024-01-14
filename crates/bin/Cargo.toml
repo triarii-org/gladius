@@ -1,0 +1,12 @@
+[package]
+name = "gladius"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+gladius-lib = { path = "../lib" }
+
+bernardo.workspace = true
+clap.workspace = true
+log.workspace = true
+coredump.workspace = true

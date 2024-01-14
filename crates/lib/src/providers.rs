@@ -1,0 +1,101 @@
+/*
+This is a simplified "dependency injection" struct, because I just have too much items in constructors
+of key components like EditorView or CodeResultsView
+ */
+
+use std::sync::{Arc, RwLock};
+
+use crate::navcomp_loader::NavCompLoader;
+use bernardo::config::config::ConfigRef;
+use bernardo::config::theme::Theme;
+use bernardo::experiments::buffer_register::{BufferRegister, BufferRegisterRef};
+use bernardo::experiments::clipboard::ClipboardRef;
+use bernardo::fs::fsf_ref::FsfRef;
+use bernardo::tsw::tree_sitter_wrapper::TreeSitterWrapper;
+use bernardo::w7e::navcomp_group::NavCompGroup;
+use bernardo::widgets::editor_widget::label::labels_provider::LabelsProviderRef;
+
+// do not share via Arc, we want to be able to "overload" providers in tests or exotic cases
+#[derive(Clone)]
+pub struct Providers {
+    config: ConfigRef,
+    fsf: FsfRef,
+    clipboard: ClipboardRef,
+    theme: Theme,
+    tree_sitter: Arc<TreeSitterWrapper>,
+
+    navcomp_loader: Arc<Box<dyn NavCompLoader>>,
+    navcomp_group: Arc<RwLock<NavCompGroup>>,
+
+    buffer_register: BufferRegisterRef,
+
+    todo_labels_providers: Vec<LabelsProviderRef>,
+}
+
+impl Providers {
+    pub fn new(
+        config: ConfigRef,
+        fsf: FsfRef,
+        clipboard: ClipboardRef,
+        theme: Theme,
+        tree_sitter: Arc<TreeSitterWrapper>,
+        /*
+        I am not sure this shouldn't be part of workspace, but for now it carries no
+        information, just implementation so I'll keep it here.
+         */
+        navcomp_loader: Arc<Box<dyn NavCompLoader>>,
+        todo_labels_providers: Vec<LabelsProviderRef>,
+    ) -> Self {
+        Providers {
+            config,
+            fsf,
+            clipboard,
+            theme,
+            tree_sitter,
+            navcomp_loader,
+            navcomp_group: Arc::new(RwLock::new(NavCompGroup::new())),
+            buffer_register: Arc::new(RwLock::new(BufferRegister::new())),
+            todo_labels_providers,
+        }
+    }
+
+    pub fn fsf(&self) -> &FsfRef {
+        &self.fsf
+    }
+
+    pub fn theme(&self) -> &Theme {
+        &self.theme
+    }
+
+    pub fn is_recording(&self) -> bool {
+        false
+    }
+
+    pub fn config(&self) -> &ConfigRef {
+        &self.config
+    }
+
+    pub fn navcomp_loader(&self) -> &dyn NavCompLoader {
+        self.navcomp_loader.as_ref().as_ref()
+    }
+
+    pub fn tree_sitter(&self) -> &Arc<TreeSitterWrapper> {
+        &self.tree_sitter
+    }
+
+    pub fn clipboard(&self) -> &ClipboardRef {
+        &self.clipboard
+    }
+
+    pub fn buffer_register(&self) -> &BufferRegisterRef {
+        &self.buffer_register
+    }
+
+    pub fn navcomp_group(&self) -> &Arc<RwLock<NavCompGroup>> {
+        &self.navcomp_group
+    }
+
+    pub fn todo_label_providers(&self) -> impl Iterator<Item = &LabelsProviderRef> {
+        self.todo_labels_providers.iter()
+    }
+}

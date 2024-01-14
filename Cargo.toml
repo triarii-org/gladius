@@ -3,3 +3,13 @@ resolver = "2"
 members = ["crates/*"]
 
 [workspace.dependencies]
+bernardo = { git = "https://github.com/triarii-org/bernardo" }
+clap = { version = "4.1.4", features = ["derive"] }
+clap-verbosity-flag = "2"
+coredump = "0.1"
+crossbeam-channel = "0.5"
+dirs = "5"
+env_logger = "0.10"
+lsp-types = "0.93"
+log = "0.4"
+ron = "0.8"

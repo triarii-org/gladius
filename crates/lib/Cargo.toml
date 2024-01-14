@@ -1,0 +1,15 @@
+[package]
+name = "gladius-lib"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bernardo.workspace = true
+crossbeam-channel.workspace = true
+clap.workspace = true
+clap-verbosity-flag.workspace = true
+dirs.workspace = true
+env_logger.workspace = true
+log.workspace = true
+lsp-types.workspace = true
+ron.workspace = true
