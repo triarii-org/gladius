@@ -5,10 +5,10 @@ use std::path::PathBuf;
 use std::process::exit;
 use std::time::SystemTime;
 
-use bernardo::config::config::{Config, ConfigRef};
+use bernardo::*;
 use log::error;
 
-use crate::constants::{CONFIG_FILE_NAME, PROGRAM_NAME};
+use crate::*;
 
 pub fn load_config(reconfigure: bool) -> ConfigRef {
     let config_dir_base = dirs::config_dir().unwrap_or_else(|| {

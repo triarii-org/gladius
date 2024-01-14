@@ -4,24 +4,7 @@ use std::path::PathBuf;
 use crossbeam_channel::select;
 use log::{debug, error};
 
-use bernardo::experiments::screen_shot::screenshot;
-use bernardo::experiments::screenspace::Screenspace;
-use bernardo::io::input::Input;
-use bernardo::io::input_event::InputEvent;
-use bernardo::io::keys::Keycode;
-use bernardo::io::output::FinalOutput;
-use bernardo::primitives::helpers::get_next_filename;
-use bernardo::w7e::handler_load_error::HandlerLoadError;
-use bernardo::w7e::inspector::{inspect_workspace, InspectError};
-use bernardo::w7e::workspace::WORKSPACE_FILE_NAME;
-use bernardo::w7e::workspace::{LoadError, ScopeLoadErrors, Workspace};
-use bernardo::widget::widget::Widget;
-use bernardo::widgets::main_view::main_view::MainView;
-
-// FIXME:
-use bernardo::gladius::providers::Providers;
-
-use crate::paradigm::recursive_treat_views;
+use bernardo::*;
 
 pub fn run_gladius<I: Input, O: FinalOutput>(providers: Providers, input: I, mut output: O, files: Vec<PathBuf>) {
     // Loading / Building workspace file
@@ -29,8 +12,8 @@ pub fn run_gladius<I: Input, O: FinalOutput>(providers: Providers, input: I, mut
     let (workspace_op, _scope_errors): (Option<Workspace>, ScopeLoadErrors) = match Workspace::try_load(workspace_dir.clone()) {
         Ok(res) => (Some(res.0), res.1),
         Err(e) => match e {
-            LoadError::WorkspaceFileNotFound => (None, ScopeLoadErrors::default()),
-            LoadError::ReadError(e) => {
+            WorkspaceLoadError::WorkspaceFileNotFound => (None, ScopeLoadErrors::default()),
+            WorkspaceLoadError::ReadError(e) => {
                 error!(
                     "failed reading workspace file at {}, because:\n{}\nterminating. To continue, rename/remove {} in that folder.",
                     workspace_dir, e, WORKSPACE_FILE_NAME

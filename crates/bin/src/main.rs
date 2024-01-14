@@ -6,27 +6,13 @@ use std::sync::Arc;
 use clap::Parser;
 use log::debug;
 
-use gladius_lib::load_config::load_config;
-use gladius_lib::logger_setup::logger_setup;
-use gladius_lib::run_gladius::run_gladius;
-
-// FIXME:
-use bernardo::gladius::navcomp_loader::NavCompLoader;
-use bernardo::gladius::providers::Providers;
-use bernardo::gladius::real_navcomp_loader::RealNavCompLoader;
-
-use bernardo::app::App;
-use bernardo::config::theme::Theme;
-use bernardo::experiments::clipboard::get_me_some_clipboard;
-use bernardo::fs::filesystem_front::FilesystemFront;
-use bernardo::fs::real_fs::RealFS;
-use bernardo::tsw::language_set::LanguageSet;
-use bernardo::tsw::tree_sitter_wrapper::TreeSitterWrapper;
+use bernardo::*;
+use gladius_lib::*;
 
 // I need an option to record IO to "build" tests, not write them.
 
 fn main() {
-    let args = gladius_lib::args::Args::parse();
+    let args = Args::parse();
     logger_setup(args.verbosity.log_level_filter());
 
     #[cfg(debug_assertions)]

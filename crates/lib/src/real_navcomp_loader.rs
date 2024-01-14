@@ -1,13 +1,6 @@
 use log::warn;
 
-use bernardo::config::config::ConfigRef;
-use bernardo::w7e::handler::Handler;
-use bernardo::w7e::handler_factory::handler_factory;
-use bernardo::w7e::handler_load_error::HandlerLoadError;
-use bernardo::w7e::navcomp_group::NavCompTickSender;
-use bernardo::w7e::project_scope::ProjectScope;
-
-use crate::navcomp_loader::NavCompLoader;
+use bernardo::*;
 
 pub struct RealNavCompLoader {}
 
